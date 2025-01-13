@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hidden_debt_gsf"
+version = "0.1.0"
+description = "Analysing the IMFs GSF data set"
+readme = "README.md"
+authors = [
+    { name = "Torben", email = "thaferkamp@gmx.de" }
+]

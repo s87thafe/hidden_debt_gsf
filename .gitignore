@@ -3,6 +3,26 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# python
+*.egg-info
+*_version.py
+*.pyc
+*__pycache__
+.mypy_cache
+
+# pytask
+.pytask.sqlite3
+.pytask
+
+# bld
+bld/
+
+# data
+src/hidden_debt_gsf/data
+
+# api_keys
+.env
+
 # C extensions
 *.so
 

@@ -3,9 +3,9 @@ import pandas as pd
 from pathlib import Path
 from hidden_debt_gsf.config import SRC, BLD_data
 
-def task_summarize_GFSSUCC(
+def task_summarize_GFSSUC(
         depends_on=BLD_data / ".dir_created",
-        produces=BLD_data / "Summaries" / "GFSSSUC" / "aggregated_summary_GFSSUC.csv"
+        produces=BLD_data / "Summaries" / "GFSSSUC" / "aggregated_summary_GFSSSUC.csv"
 ):
     """Task to summarize GFSSUC data."""
     # Define directories

@@ -20,6 +20,9 @@ bld/
 # data
 src/hidden_debt_gsf/data
 
+# tests
+tests/
+
 # api_keys
 .env
 

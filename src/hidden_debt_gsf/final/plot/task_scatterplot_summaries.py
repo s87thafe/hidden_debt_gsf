@@ -10,7 +10,7 @@ def task_create_scatter_plots(
             BLD_data / "Summaries" / "GFSMAB" / "aggregated_summary_GFSMAB.csv",
             BLD_data / "Summaries" / "GFSSSUC" / "aggregated_summary_GFSSSUC.csv"
         ],
-        produces=BLD_figures / f"summaries_scatter_plot.html"
+        produces=BLD_figures / "scatter_plot.png"
 ):
     """Task to create scatter plots using aggregated summaries."""
     # Folders to process
@@ -42,21 +42,18 @@ def task_create_scatter_plots(
     # Define numeric columns for scatter plots
     numeric_columns = ['Sum of Legitimate Entries', 'Number of Covered Countries']
 
-    # Generate scatter plots for all possible combinations of numeric columns
-    scatter_plots = []
-    for x_col, y_col in combinations(numeric_columns, 2):
-        fig = px.scatter(
-            agg_summary,
-            x=x_col,
-            y=y_col,
-            color='Folder',  # Color by folder
-            hover_data=['Classification Name', 'Sector Name', 'Unit Name'],
-            title=f"Scatter Plot of {x_col} vs {y_col}",
-            labels={x_col: x_col, y_col: y_col}
-        )
-        scatter_plots.append(fig)
+    # Generate scatter plot for the first combination of numeric columns
+    x_col, y_col = numeric_columns[0], numeric_columns[1]
+    fig = px.scatter(
+        agg_summary,
+        x=x_col,
+        y=y_col,
+        color='Folder',  # Color by folder
+        hover_data=['Classification Name', 'Sector Name', 'Unit Name'],
+        title=f"Scatter Plot of {x_col} vs {y_col}",
+        labels={x_col: x_col, y_col: y_col}
+    )
 
-    # Save plots as HTML files
-    for i, (fig, produce) in enumerate(zip(scatter_plots, produces), start=1):
-        fig.write_html(produce)
-        print(f"Scatter plot {i} saved to {produce}")
+    # Save the plot as an HTML file
+    fig.write_html(produces)
+    print(f"Scatter plot saved to {produces}")

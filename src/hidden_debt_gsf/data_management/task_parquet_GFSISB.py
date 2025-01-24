@@ -30,7 +30,7 @@ def convert_csv_to_parquet(
             print(f"File not found for {year}: {file_path}")
 
 def task_merge_gfsibs(
-        depends_on=BLD_data / "Parquet" / "GFSIBS" / "GFSIBS_2014.parquet",
+        depends_on=BLD_data / ".dir_created",
         produces=BLD_data / "Parquet" / "GFSIBS" / "filtered_merged_gsfibs.parquet"
 ):
     """
@@ -63,7 +63,7 @@ def task_merge_gfsibs(
 
     # Loop through the years and process each Parquet file
     for year in years:
-        parquet_path = BLD_data / "Parquet" / "GFSIBS" / f"GFSIBS_{year}.parquet"
+        parquet_path = SRC / "Parquet" / "GFSIBS" / f"GFSIBS_{year}.parquet"
 
         if parquet_path.exists():
             print(f"Processing file for {year}: {parquet_path}")

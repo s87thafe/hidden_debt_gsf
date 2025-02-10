@@ -17,6 +17,9 @@ __pycache__/
 # bld
 bld/
 
+#bin
+bin/
+
 # data
 src/hidden_debt_gsf/data
 

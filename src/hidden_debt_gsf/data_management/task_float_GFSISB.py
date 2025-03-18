@@ -4,7 +4,7 @@ from hidden_debt_gsf.config import SRC, BLD_data
 
 
 def most_populated_combinations_gfsibs(
-        depends_on=BLD_data / "Parquet" / "GFSIBS" / "filtered_merged_gsfibs.parquet",
+        depends_on=BLD_data / "Merged" / "filtered_merged_gsfibs.csv",
         produces=BLD_data / "DTA" / "GFSIBS" / "most_populated_float.csv"
 ):
     """
@@ -16,7 +16,7 @@ def most_populated_combinations_gfsibs(
                            the path to the filtered data.
         produces (str): Path to the output .dta file.
     """
-    merged_df = pd.read_parquet(depends_on)
+    merged_df = pd.read_csv(depends_on)
 
     # Step 1: Initialize an empty list to store the most populated sector and classification data per country
     most_populated_combinations = []

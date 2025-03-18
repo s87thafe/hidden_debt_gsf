@@ -1,16 +1,15 @@
 import pandas as pd
 from hidden_debt_gsf.config import SRC, BLD_data
 
-
 def task_merge_gfsibs(
         depends_on=BLD_data / ".dir_created",
         produces=BLD_data / "Merged" / "filtered_merged_gsfibs.csv"
 ):
     """
-    Filters and merges data from multiple Parquet files based on keywords.
+    Filters and merges data from multiple CSV files based on keywords.
 
     Args:
-        produces (str): Path to the output Parquet file.
+        produces (str): Path to the output CSV file.
     """
     keywords = ["debt", "liabilities", "borrowing"]
     years = [2014, 2015, 2016, 2017, 2019, 2020, 2024]
@@ -26,15 +25,15 @@ def task_merge_gfsibs(
             filtered_rows = data[data[column_name].str.contains(keyword, case=False, na=False)].copy()
             combined_rows = pd.concat([combined_rows, filtered_rows], ignore_index=True)
 
-        # Drop duplicate rows based on all columns except the 'Keyword' column
-        combined_rows = combined_rows.drop_duplicates(subset=data.columns.tolist())
+        # Drop duplicate rows based on all columns
+        combined_rows = combined_rows.drop_duplicates()
 
         return combined_rows
 
     # Initialize an empty list to collect filtered data
     filtered_data_chunks = []
 
-    # Loop through the years and process each Parquet file
+    # Loop through the years and process each CSV file
     for year in years:
         csv_path = SRC / "data" / "WEB_CSV" / f"GFSIBS{year}.csv"
 
@@ -52,7 +51,7 @@ def task_merge_gfsibs(
         else:
             print(f"CSV file not found for {year}: {csv_path}")
 
-    # Combine all filtered data and save as Parquet
+    # Combine all filtered data and save as CSV
     if filtered_data_chunks:
         final_filtered_data = pd.concat(filtered_data_chunks, ignore_index=True)
         final_filtered_data.to_csv(produces, index=False)

@@ -169,7 +169,7 @@ def calculate_vintage_diff(df):
     
     # Compute the difference in Value with respect to the previous vintage within each group
     df["Value_Diff"] = df.groupby(["Country Code", "Year"])["Value"].diff()
-    df["Value_Diff"] = df["Value_Diff"].fillna(0)  # Fill NaN values with 0
+    df["Value_Diff"] = df["Value_Diff"].dropna()  # Drop NaN values
     # Calculate percentage change using the previous vintage's Value
     df["Value_Diff_Perc"] = df["Value_Diff"] / df.groupby(["Country Code", "Year"])["Value"].shift(1) * 100
     

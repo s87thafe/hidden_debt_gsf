@@ -4,7 +4,7 @@ from hidden_debt_gsf.config import SRC, BLD_data, BLD_figures
 import plotly.express as px
 
 def task_most_populated_combinations_fix_gfsibs(
-        depends_on=BLD_data / "Parquet" / "GFSIBS" / "filtered_merged_gsfibs.parquet",
+        depends_on=BLD_data / "Merged" / "filtered_merged_gsfibs.csv",
         produces=BLD_data / "DTA" / "GFSIBS" / "most_populated_fix.dta"
 ):
     """
@@ -16,7 +16,7 @@ def task_most_populated_combinations_fix_gfsibs(
                            the path to the filtered data.
         produces (str): Path to the output .dta file.
     """
-    merged_df = pd.read_parquet(depends_on)
+    merged_df = pd.read_csv(depends_on)
 
     # Step 1: Initialize an empty list to store the most populated sector and classification data per country
     most_populated_combinations = []
@@ -74,7 +74,7 @@ def task_most_populated_combinations_fix_gfsibs(
     combined_most_populated_combinations.to_stata(produces)
 
 def task_all_sectors_fix_gfsibs(
-        depends_on=BLD_data / "Parquet" / "GFSIBS" / "filtered_merged_gsfibs.parquet"
+        depends_on=BLD_data / "Merged" / "filtered_merged_gsfibs.csv"
 ):
     """
     Processes the filtered data to generate separate datasets for each unique combination of Sector Code,
@@ -83,10 +83,9 @@ def task_all_sectors_fix_gfsibs(
     Args:
         depends_on (str): Path to the filtered data in parquet format.
     """
-    import plotly.express as px
 
     # Step 1: Load the data
-    merged_df = pd.read_parquet(depends_on)
+    merged_df = pd.read_csv(depends_on)
 
     # Step 2: Filter the data for relevant conditions
     filtered_df = merged_df[
@@ -218,56 +217,3 @@ def task_all_sectors_fix_gfsibs(
         fig.write_html(hist_dir / hist_file_name)
 
     print(f"Datasets and histograms have been saved to {output_dir} and {hist_dir}")
-
-
-
-#    def task_calculate_vintage_differences_gfsibs(
-#            depends_on=BLD_data / "DTA" / "GFSIBS" / "most_populated_float.csv",
-#            produces=BLD_data / "DTA" / "GFSIBS" / "vintage_differences.csv"
-#    ):
-#        """
-#        Processes the filtered data to calculate differences and percentage changes across vintages for all countries.
-#
-#        Args:
-#            depends_on (str): Path to the input .csv file.
-#            produces (str): Path to the output .csv file.
-#        """
-#        # Step 1: Load the data
-#        most_populated_df = pd.read_csv(depends_on)
-#
-#        # Step 3: Identify year columns
-#        year_columns = [col for col in most_populated_df.columns if col.isdigit() and 1970 <= int(col) <= 2020]
-#
-#        # Step 4: Reshape data for analysis
-#        pivot_data = (
-#            most_populated_df.melt(
-#                id_vars=['Country Code', 'Vintage'], 
-#                value_vars=year_columns, 
-#                var_name='Year', 
-#                value_name='Value'
-#            )
-#        )
-#
-#        # Ensure 'Value' is numeric
-#        pivot_data['Value'] = pd.to_numeric(pivot_data['Value'], errors='coerce')
-#
-#        # Step 5: Calculate differences and percentage changes across vintages
-#        pivot_data['Year'] = pivot_data['Year'].astype(int)
-#        pivot_data['Vintage'] = pivot_data['Vintage'].astype(str)
-#
-#        # Group by country and year, and calculate differences and percentage changes
-#        difference_data = (
-#            pivot_data
-#            .sort_values(by=['Country Code', 'Year', 'Vintage'])
-#            .groupby(['Country Code', 'Year'], group_keys=False)
-#            .apply(lambda group: group.assign(
-#                Difference=group['Value'].diff(), 
-#                Percent_Change=group['Value'].pct_change() * 100
-#            ))
-#            .dropna(subset=['Difference', 'Percent_Change'])  # Remove rows with NaN in either column
-#        )
-#
-#        # Step 6: Save the result to a CSV file
-#        difference_data.to_csv(produces, index=False)
-#
-#        print("Vintage differences and percentage changes have been calculated and saved to:", produces)
